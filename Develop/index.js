@@ -17,6 +17,7 @@
 
 const fs = require("fs");
 const inquirer = require("inquirer");
+const Choices = require("inquirer/lib/objects/choices");
 const util = require("util");
 const writeFile = util.promisify(fs.writeFile);
 
@@ -33,12 +34,7 @@ inquirer
             name: "description",
 
         },
-        {
-            type: "input",
-            message: "List the table of contents?",
-            name: "contents",
 
-        },
         {
             type: "input",
             message: "What is the installation process?",
@@ -52,9 +48,15 @@ inquirer
 
         },
         {
-            type: "input",
+            type: "list",
             message: "What license are you using?",
             name: "license",
+            choices: [
+                "MIT",
+                "ISC",
+
+                "gpl"
+            ]
 
         },
         {
@@ -78,9 +80,25 @@ inquirer
 
     ])
     .then(function (response) {
-        const mdFile = `# ${response.title}
+        let badge;
+        if (response.license === "MIT") {
+            badge = "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)"
+        }
+        if (response.license === "ISC") {
+            badge = "[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)"
+        }
+        if (response.license === "gpl") {
+            badge = "[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)"
+        }
+        const mdFile = `# ${response.title} ${badge}
         \n## Discription \n${response.description}
-        \n## Table of Contents \n* ${response.contents}
+        \n## Table of Contents \n* [Installation](#Installation)
+        \n* [Installation](#Installation)
+        \n* [Usage](#Usage)
+        \n* [License](#License)
+        \n* [Contributing](#Contributing)
+        \n* [Tests](#Tests)
+        \n* [Questions](#Questions)
         \n## Installation \n${response.installation}
         \n## Usage \n${response.usage}
         \n## License \n${response.license}
