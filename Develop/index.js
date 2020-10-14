@@ -73,12 +73,19 @@ inquirer
         },
         {
             type: "input",
-            message: "Any questions for the user?",
-            name: "questions",
+            message: "What is your github username?",
+            name: "questionOne",
+        },
+        {
 
-        }
+            type: "input",
+            message: "What is your email address?",
+            name: "questionTwo",
+
+        },
 
     ])
+
     .then(function (response) {
         let badge;
         if (response.license === "MIT") {
@@ -90,6 +97,7 @@ inquirer
         if (response.license === "gpl") {
             badge = "[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)"
         }
+        const gitHub = ("https://github.com/" + response.questionOne);
         const mdFile = `# ${response.title} ${badge}
         \n## Discription \n${response.description}
         \n## Table of Contents \n* [Installation](#Installation)
@@ -104,7 +112,9 @@ inquirer
         \n## License \n${response.license}
         \n## Contributing \n${response.contribute}
         \n## Tests \n${response.tests}
-        \n## Questions \n${response.questions}
+        \n## Questions \n[${response.questionOne}](${gitHub})
+         \nContact me by email with any further questions.
+        \n${response.questionTwo}  
 
         `;
         writeFile("README.md", mdFile)
